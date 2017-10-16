@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     final ArrayList<String> al = new ArrayList<String>();
     final ArrayAdapter[] adapter = new ArrayAdapter[1];
     final ArrayList<String>[] dcoBackupAllCients = new ArrayList[1];
+    final ArrayMap<Integer, String>  users = new ArrayMap<>();
     List<String> dcobackup = new ArrayList<>();
 
     String resumeAllClienbts = "";
@@ -111,6 +113,9 @@ public class MainActivity extends AppCompatActivity {
         /*update helperKey to keep the correct item from listview previously selected
         * actualizar helperKey para mantener el correcto item del listView previamente seleccionado*/
         helperKey.setText(Integer.toString(currentId));
+        Intent in = new Intent(getApplicationContext(), Main2Activity.class);
+        in.putExtra("client", allCients.get(currentId));
+        startActivityForResult(in, 1);
     }
     public void LoadDcoFile(){
         /********LOAD FILE FROM SDCARD*************/
@@ -132,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                     /*counter to read data from the file and knows when we need to add a new item to the ArrayList allClients and dcoBackUp
                      * contador para leer information del archivo y saber cuando necesitamos agregar un nuevo item al arrayList allClients y dcoBackup */
                     int count = 0;
+                    int extracounter = 0;
                     String helperText = "";
                     while ((line = br.readLine()) != null) {
                         /*increase the counter after to read a new line
@@ -144,6 +150,8 @@ public class MainActivity extends AppCompatActivity {
                         * este bloque vas a ser ejecutado cuando es necesario crear un nuevo elemento en el arrayList(allClient y dcoBackuo), el patron
                         * encontrado fue despues de tres líneas*/
                         if(count >= 3){
+                            users.put(extracounter, helperText);
+                            extracounter++;
                             allCients.add(helperText);
                             dcobackup.add(helperText);
                             count = 0;
@@ -153,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
                     /**Close the bufferREader
                      * cerrarr el bufferReader*/
                     br.close();
+
                     /*fill the ListView with the new data created, in this case the data on allClients
                     * llenar el listview con los nuevos datos creados, en este caso son los datos en allClients*/
                     adapter[0] = new ArrayAdapter(getBaseContext(), android.R.layout.simple_list_item_1, allCients);
@@ -237,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
                 /*do a string to then save it on the DCO file
                 * hacer una cadena para después guardarla en el archivo DCO*/
                 for (int i = 0; i<limit; i++){
-                    resumeAllClienbts = resumeAllClienbts + dcobackup.get(i) + "\n\n";
+                    resumeAllClienbts = resumeAllClienbts + dcobackup.get(i) + "\n";
                 }
                 /*make a try to handle an possible error -- hacer un try para manejar un posible error*/
                 try {
@@ -283,5 +292,40 @@ public class MainActivity extends AppCompatActivity {
         }).start();/*Start the execution -- iniciar la ejecución*/
 
     }
-
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK){
+            //Toast.makeText(this, data.getStringExtra("lecture"), Toast.LENGTH_SHORT).show();
+            String newData = data.getStringExtra("lecture");
+            try{
+            /*get the current item selected on the listview
+            * obtener el item actual en el listview*/
+                int currentId = Integer.parseInt(helperKey.getText().toString());
+            /*in this part we update the data in 'dcoBackupAllCients[0]' with the new measure took it
+            * en esta parte nosotros actulizamos los datos en 'dcoBackupAllCients[0]' con la nueva medida tomada*/
+                dcoBackupAllCients[0].set(currentId, newData);
+            /*in this part we update the data in 'dcobackuo' with the new measure took it
+            * en esta parte nosotros actulizamos los datos en 'dcobackup' con la nueva medida tomada*/
+                dcobackup.set(currentId, newData);
+            /*remove the current item updated and then delete it on the ListView
+            * remover el item actual actulizado y luego borrarlo del listvIew*/
+                //allCients.remove(currentId);
+                if(tv.getChildAt(currentId).isEnabled())
+                {
+                    tv.getChildAt(currentId).setEnabled(false);
+                }
+                //adapter[0].notifyDataSetChanged();
+            /*decrease the number of measure to take
+            * disminuir el numero de medidas a tomar*/
+                dataClient.setText("");
+                totalClientsToCheck--;
+                totalClients.setText(Integer.toString(totalClientsToCheck));
+            /*Display a new toast with a message
+            * mostrat un nuevo toast con un mensaje */
+                Toast.makeText(MainActivity.this, "Lectura guardada correctamente", Toast.LENGTH_SHORT).show();
+            }catch (Exception e){
+                Toast.makeText(MainActivity.this, "Ha surgido un error: " + e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }
