@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         /*textview to display how many people are not been took it a measure
         * textview para mostrar cuantas personas aun no se han tomado medidas*/
         totalClients = (TextView)findViewById(R.id.totalClients);
-
+        finishTravel.setVisibility(View.INVISIBLE);
         /*hide the helperKey*/
         helperKey.setVisibility(View.INVISIBLE);
         /*Event to save the DCO FILE after to take all measures
@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }).start();//Start the thread -- iniciar el hilo
-
+        finishTravel.setVisibility(View.VISIBLE);
         /*hide the button that started the process to read data from the DCO flle
         * oculat el boton que inicio el proceso de lectura de datos del archivo DCO*/
         btnRunApp.setVisibility(View.GONE);

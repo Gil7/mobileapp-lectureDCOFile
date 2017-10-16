@@ -9,14 +9,16 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="368dp"
-        android:layout_height="495dp"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
         <Button
+            android:textColor="@color/mwhite"
+            android:layout_margin="10dp"
             android:id="@+id/btnRunApp"
-            android:text="Run app"
-            android:layout_width="368dp"
+            android:background="@color/colorPrimary"
+            android:text="Leer archivo"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
         <ListView
@@ -25,6 +27,7 @@
             android:layout_height="300dp"
             android:layout_weight="5.06"></ListView>
         <EditText
+            android:visibility="gone"
             android:id="@+id/dataClient"
             android:layout_width="match_parent"
             android:layout_height="100dp"
@@ -34,6 +37,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <Button
+                android:visibility="gone"
                 android:id="@+id/btnSaveMeasure"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -56,6 +60,9 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
         <Button
+            android:textColor="@color/mwhite"
+            android:background="@color/mgreen"
+            android:layout_margin="10dp"
             android:text="Finalizar recorrido"
             android:id="@+id/finishTravel"
             android:layout_width="match_parent"

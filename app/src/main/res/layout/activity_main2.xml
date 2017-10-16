@@ -13,12 +13,17 @@
         android:layout_height="wrap_content" />
 
     <EditText
+        android:textSize="30dp"
+        android:layout_marginTop="10dp"
         android:text="0"
         android:id="@+id/lecture"
         android:hint="Lectura"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button
+        android:textColor="@color/mwhite"
+        android:layout_margin="10dp"
+        android:background="@color/mgreen"
         android:onClick="SendData"
         android:text="Guadar"
         android:layout_width="match_parent"
